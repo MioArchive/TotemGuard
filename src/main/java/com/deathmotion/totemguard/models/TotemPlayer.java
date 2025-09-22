@@ -26,6 +26,7 @@ import com.deathmotion.totemguard.checks.impl.badpackets.BadPacketsD;
 import com.deathmotion.totemguard.checks.impl.misc.ClientBrand;
 import com.deathmotion.totemguard.database.entities.DatabasePlayer;
 import com.deathmotion.totemguard.manager.CheckManager;
+import com.deathmotion.totemguard.models.impl.ClickData;
 import com.deathmotion.totemguard.models.impl.DigAndPickupState;
 import com.deathmotion.totemguard.models.impl.TotemData;
 import com.github.retrooper.packetevents.PacketEvents;
@@ -40,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 public class TotemPlayer implements TotemUser {
     public final CheckManager checkManager;
     public final TotemData totemData;
+    public ClickData clickData;
     public final UUID uniqueId;
     public final User user;
 
@@ -54,6 +56,7 @@ public class TotemPlayer implements TotemUser {
         this.uniqueId = user.getUUID();
         this.user = user;
 
+        clickData = null;
         checkManager = new CheckManager(this);
         totemData = new TotemData();
         digAndPickupState = new DigAndPickupState();

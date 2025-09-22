@@ -19,8 +19,11 @@
 package com.deathmotion.totemguard.events.bukkit;
 
 import com.deathmotion.totemguard.TotemGuard;
+import com.deathmotion.totemguard.api.events.PreciseInventoryClickEvent;
 import com.deathmotion.totemguard.models.TotemPlayer;
+import com.deathmotion.totemguard.models.impl.ClickData;
 import com.deathmotion.totemguard.models.impl.DigAndPickupState;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,6 +36,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Objects;
 
 public class CheckManagerBukkitListener implements Listener {
 
@@ -60,6 +65,18 @@ public class CheckManagerBukkitListener implements Listener {
 
         TotemPlayer totemPlayer = TotemGuard.getInstance().getPlayerDataManager().getPlayer(player);
         if (totemPlayer == null) return;
+
+        // player has a previous click saved, parsing it into the new Event to get precise timestamps
+        ClickData clickData = totemPlayer.clickData;
+
+        if (clickData != null
+                && event.getRawSlot() == clickData.slot()
+                && Objects.requireNonNull(event.getCurrentItem()).getType() == clickData.clickedItem().getType()) {
+
+            Bukkit.getPluginManager().callEvent(
+                    new PreciseInventoryClickEvent(player, clickData.timestamp(), event)
+            );
+        }
 
         if (totemPlayer.totemData.isExpectingTotemSwap()) {
             ItemStack item = event.getCurrentItem();

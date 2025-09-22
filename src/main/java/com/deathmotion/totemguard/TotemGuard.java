@@ -24,6 +24,7 @@ import com.deathmotion.totemguard.database.DatabaseProvider;
 import com.deathmotion.totemguard.events.bukkit.CheckManagerBukkitListener;
 import com.deathmotion.totemguard.events.lunarclient.ApolloPlayerListener;
 import com.deathmotion.totemguard.events.packets.CheckManagerPacketListener;
+import com.deathmotion.totemguard.events.packets.PacketClickListener;
 import com.deathmotion.totemguard.events.packets.PacketPlayerJoinQuit;
 import com.deathmotion.totemguard.manager.*;
 import com.deathmotion.totemguard.messenger.MessengerService;
@@ -99,6 +100,7 @@ public final class TotemGuard extends JavaPlugin {
 
         PacketEvents.getAPI().getEventManager().registerListener(new PacketPlayerJoinQuit(this));
         PacketEvents.getAPI().getEventManager().registerListener(new CheckManagerPacketListener());
+        PacketEvents.getAPI().getEventManager().registerListener(new PacketClickListener());
 
         getServer().getPluginManager().registerEvents(new CheckManagerBukkitListener(), this);
 
